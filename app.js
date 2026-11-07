@@ -399,7 +399,11 @@
   }
 
   // ---------- запуск ----------
+  // После входа через Google Supabase оставляет в адресе пустой «#» — убираем.
+  const cleanUrl = () => { if (location.hash === "" || location.hash === "#" || /^#(access_token|error)/.test(location.hash)) { try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {} } };
+  if (location.href.endsWith("#")) cleanUrl();
   async function onUser(u) {
+    cleanUrl();
     user = u; nick = null; role = null;
     if (user && sb) {
       const { data } = await sb.from("family").select("nick,role").eq("email", (user.email || "").toLowerCase()).maybeSingle();
@@ -414,6 +418,6 @@
   buildKeyboard(); renderTexts(); renderAuth(); goHome();
   if (sb) {
     sb.auth.getSession().then(({ data }) => onUser(data.session ? data.session.user : null));
-    sb.auth.onAuthStateChange((ev, session) => { if (ev === "SIGNED_IN" && (!user || user.id !== session.user.id)) onUser(session.user); });
+    sb.auth.onAuthStateChange((ev, session) => { cleanUrl(); if (ev === "SIGNED_IN" && (!user || user.id !== session.user.id)) onUser(session.user); });
   } else onUser(null);
 })();

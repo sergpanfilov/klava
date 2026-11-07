@@ -17,7 +17,11 @@
   $("loginBtn").addEventListener("click", () => sb.auth.signInWithOAuth({ provider: "google", options: { redirectTo: location.origin + location.pathname } }));
   $("logoutBtn").addEventListener("click", async () => { await sb.auth.signOut(); location.reload(); });
 
+  // После входа через Google Supabase оставляет в адресе пустой «#» — убираем.
+  const cleanUrl = () => { if (location.hash === "" || location.hash === "#" || /^#(access_token|error)/.test(location.hash)) { try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {} } };
+  if (location.href.endsWith("#")) cleanUrl();
   async function start() {
+    cleanUrl(); sb.auth.onAuthStateChange(() => cleanUrl());
     const { data: { session } } = await sb.auth.getSession();
     const user = session && session.user;
     $("loginBtn").hidden = !!user; $("logoutBtn").hidden = !user;
