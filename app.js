@@ -36,7 +36,9 @@
       fingers: { lp: "mały palec lewej ręki", lr: "palec serdeczny lewej ręki", lm: "palec środkowy lewej ręki", li: "palec wskazujący lewej ręki",
         rp: "mały palec prawej ręki", rr: "palec serdeczny prawej ręki", rm: "palec środkowy prawej ręki", ri: "palec wskazujący prawej ręki", th: "kciuk — spacja" },
       withShiftL: "+ lewy Shift (mały palec lewej ręki)", withShiftR: "+ prawy Shift (mały palec prawej ręki)", withAltGr: "+ prawy Alt (kciuk prawej ręki)",
-      legend: ["mały", "serdeczny", "środkowy", "wskazujący", "kciuk"], spaceKey: "spacja"
+      legend: ["mały", "serdeczny", "środkowy", "wskazujący", "kciuk"], spaceKey: "spacja",
+      errOf: (e, n) => `${e} na ${n}`, errsL: "pomyłek na litery", tempo: "Tempo", langToday: "Dziś po polsku", langChange: "zmień na rosyjski",
+      newKeys: "Nowe klawisze:", allKeys: "Ćwiczymy:", hideTry: "Spróbuj bez podpowiedzi: schowaj litery", streak: n => n >= 2 ? `Ćwiczysz już ${n} dni z rzędu!` : ""
     },
     ru: {
       tagline: "печать десятью пальцами", login: "Войти через Google", logout: "Выйти",
@@ -60,7 +62,9 @@
       fingers: { lp: "мизинец левой руки", lr: "безымянный палец левой руки", lm: "средний палец левой руки", li: "указательный палец левой руки",
         rp: "мизинец правой руки", rr: "безымянный палец правой руки", rm: "средний палец правой руки", ri: "указательный палец правой руки", th: "большой палец — пробел" },
       withShiftL: "+ левый Shift (мизинец левой руки)", withShiftR: "+ правый Shift (мизинец правой руки)", withAltGr: "",
-      legend: ["мизинец", "безымянный", "средний", "указательный", "большой"], spaceKey: "пробел"
+      legend: ["мизинец", "безымянный", "средний", "указательный", "большой"], spaceKey: "пробел",
+      errOf: (e, n) => `${e} из ${n}`, errsL: "ошибок на букв", tempo: "Темп", langToday: "Сегодня по-русски", langChange: "переключить на польский",
+      newKeys: "Новые клавиши:", allKeys: "Тренируем:", hideTry: "Попробуй без подсказки: спрятать буквы", streak: n => n >= 2 ? `Занимаешься уже ${n} дней подряд!` : ""
     }
   };
 
@@ -218,13 +222,13 @@
   function renderTexts() {
     document.documentElement.lang = lang;
     $("tagline").textContent = t().tagline;
-    $("langPl").setAttribute("aria-pressed", lang === "pl"); $("langRu").setAttribute("aria-pressed", lang === "ru");
+    $("langBtn").innerHTML = `${t().langToday} · <u>${t().langChange}</u>`; $("passesHint").textContent = t().passes;
     $("loginBtn").textContent = t().login; $("logoutBtn").textContent = t().logout;
     $("lsBack").textContent = t().back; $("lsStart").textContent = t().start; $("lsEnter").innerHTML = t().enter.replace("Enter", "<kbd>Enter</kbd>");
     $("sSpeedL").textContent = t().speed; $("sErrL").textContent = t().errs;
-    $("rSpeedL").textContent = t().speed; $("rAccL").textContent = t().acc; $("rTimeL").textContent = t().time;
+    $("rSpeedL").textContent = t().tempo; $("rAccL").textContent = t().errsL; $("rTimeL").textContent = t().time;
     $("againBtn").textContent = t().repeat; $("lookHint").textContent = t().look;
-    $("hideKb").textContent = $("kb").classList.contains("hide") ? t().show : t().hide;
+    $("hideKb").textContent = $("kb").classList.contains("hide") ? t().show : t().hideTry;
     $("warnLayoutT").textContent = t().layoutT; $("warnLayoutS").textContent = t().layoutS;
     $("warnCaps").textContent = t().caps; $("warnFocus").textContent = t().focus;
     $("guestNote").textContent = t().guest;
@@ -247,6 +251,9 @@
     const ws = weekStart(); let sessions = 0;
     for (let i = 0; i < 7; i++) { const d = new Date(ws); d.setDate(d.getDate() + i); if ((byDay[dayKey(d)] || 0) >= SESSION_MIN * 60) sessions++; }
     $("week").innerHTML = `<span>${t().week}</span>` + Array.from({ length: Math.max(WEEK_PLAN, sessions) }, (_, i) => `<span class="dot ${i < sessions ? "on" : ""}">${i < sessions ? "✓" : ""}</span>`).join("") + `<span>${t().weekOf(sessions, WEEK_PLAN)}</span>`;
+    let streakN = 0; { const d = new Date(); d.setHours(0, 0, 0, 0); if ((byDay[dayKey(d)] || 0) < SESSION_MIN * 60) d.setDate(d.getDate() - 1); let rest = false;
+      while (true) { const k = dayKey(d); if ((byDay[k] || 0) >= SESSION_MIN * 60) { streakN++; } else if (!rest && streakN > 0) { rest = true; } else break; d.setDate(d.getDate() - 1); if (streakN > 400) break; } }
+    $("streakLine").textContent = t().streak(streakN); $("streakLine").hidden = !t().streak(streakN);
     const nl = nextLesson(lang);
     $("continueBtn").textContent = t().cont(nl + 1);
     $("lessonsH").textContent = t().lessons;
@@ -272,6 +279,8 @@
     curLesson = i; const ls = K.LESSONS[lang][i];
     $("lsTitle").textContent = `${t().lesson} ${i + 1}. ${ls.title}`;
     $("lsTip").textContent = ls.tip || "";
+    const L = K.LAYOUTS[lang];
+    $("lsKeys").innerHTML = `<span class="muted small">${i === 0 ? t().allKeys : t().newKeys}</span>` + [...ls.keys].map(k => `<span class="keychip f-${K.FINGER[k] || "th"}">${(L.labels[k] || k).toUpperCase()}</span>`).join("");
     const ne = nextEx(lang, i); const list = $("exlist"); list.innerHTML = "";
     K.EX_NAMES[lang].forEach((n, ex) => {
       const b = document.createElement("button"); b.className = "ex" + (ex === ne ? " next" : "");
@@ -292,6 +301,7 @@
     const tx = $("text"); tx.innerHTML = "";
     [...text].forEach(c => { const s = document.createElement("span"); s.textContent = c; if (c === " ") s.className = "sp"; tx.appendChild(s); });
     show("ready"); showTarget(" "); paint();
+    $("hideKb").hidden = curLesson < 3; $("hideKb").textContent = $("kb").classList.contains("hide") ? t().show : t().hideTry;
     if (!document.hasFocus()) $("warnFocus").hidden = false;
   }
   function paint() {
@@ -312,7 +322,7 @@
     const stars = acc >= 95 ? 3 : acc >= 85 ? 2 : 1;
     const wasDone = lessonDone(lang, curLesson);
     $("rStars").innerHTML = starStr(stars);
-    $("rSpeed").textContent = speed; $("rAcc").textContent = acc + "%";
+    $("rSpeed").textContent = `${speed} ${t().speed}`; $("rAcc").textContent = t().errOf(errors, text.length);
     $("rTime").textContent = secs >= 60 ? `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, "0")}` : secs + " s";
     $("rMsg").textContent = stars === 3 ? t().msg3 : stars === 2 ? t().msg2 : t().msg1;
     $("saved").textContent = "…";
@@ -371,14 +381,13 @@
     lang = l; if (manual) store.set("klava-lang", { lang: l, day: todayKey() });
     buildKeyboard(); renderTexts(); goHome();
   }
-  $("langPl").addEventListener("click", () => setLang("pl", true));
-  $("langRu").addEventListener("click", () => setLang("ru", true));
+  $("langBtn").addEventListener("click", () => setLang(other(lang), true));
   $("continueBtn").addEventListener("click", () => openLesson(nextLesson(lang)));
   $("lsBack").addEventListener("click", goHome);
   $("lsStart").addEventListener("click", () => startEx(nextEx(lang, curLesson)));
   $("nextBtn").addEventListener("click", goNext);
   $("againBtn").addEventListener("click", () => startEx(curEx));
-  $("hideKb").addEventListener("click", () => { const h = $("kb").classList.toggle("hide"); store.set("klava-hide", h); $("hideKb").textContent = h ? t().show : t().hide; });
+  $("hideKb").addEventListener("click", () => { const h = $("kb").classList.toggle("hide"); store.set("klava-hide", h); $("hideKb").textContent = h ? t().show : t().hideTry; });
   $("loginBtn").addEventListener("click", () => sb.auth.signInWithOAuth({ provider: "google", options: { redirectTo: location.origin + location.pathname } }));
   $("logoutBtn").addEventListener("click", async () => { await sb.auth.signOut(); location.reload(); });
 

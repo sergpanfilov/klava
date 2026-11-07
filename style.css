@@ -201,3 +201,10 @@ td.n, th.n { text-align: right; }
 .day.today { outline: 2px solid var(--ink); outline-offset: -2px; }
 
 @media (prefers-reduced-motion: reduce) { .odo .strip[data-roll="1"].roll { transition: none; } .key.target { animation: none; } .text.shake { animation: none; } .fg, .bar i, .track i { transition: none; } }
+
+/* новые клавиши урока крупно, цветом пальца */
+.newkeys { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.keychip { display: inline-grid; place-items: center; min-width: 40px; height: 40px; padding: 0 8px; border-radius: 10px; font-family: var(--mono); font-weight: 700; font-size: 20px; background: color-mix(in srgb, var(--fc) var(--tint), var(--surface)); border: 1.5px solid color-mix(in srgb, var(--fc) 50%, var(--surface)); border-bottom-width: 3px; }
+#langBtn u { text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+/* телефон: компактная клавиатура — без ряда цифр и рук, клавиши крупнее */
+@media (max-width: 520px) { .kb .row:first-child, .hands { display: none; } .key { height: 40px; font-size: 14px; } .finger-say { font-size: 19px; } }

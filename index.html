@@ -23,10 +23,8 @@
   <header class="top">
     <a class="brand" href="./"><h1>Klava</h1><span id="tagline"></span></a>
     <div class="top-right">
-      <div class="seg" role="group" aria-label="Język / Язык">
-        <button id="langPl" aria-pressed="false">PL</button>
-        <button id="langRu" aria-pressed="false">RU</button>
-      </div>
+      <button class="ghost" id="langBtn"></button>
+      <span hidden><button id="langPl"></button><button id="langRu"></button></span>
       <span class="who" id="who" hidden></span>
       <button class="gbtn" id="loginBtn" hidden></button>
       <button class="ghost" id="logoutBtn" hidden></button>
@@ -48,18 +46,19 @@
           <div class="track"><i id="minBar"></i></div>
         </div>
         <div class="week" id="week"></div>
+        <p class="muted small" id="streakLine" hidden></p>
       </div>
       <button class="go" id="continueBtn"></button>
     </div>
     <p class="note" id="guestNote" hidden></p>
-    <div class="sec-h"><h3 id="lessonsH"></h3><a class="small muted" id="familyLink" href="rodzina.html" hidden>Kabinet rodziny →</a></div>
+    <div class="sec-h"><h3 id="lessonsH"></h3><span class="small muted" id="passesHint"></span><a class="small muted" id="familyLink" href="rodzina.html" hidden>Kabinet rodziny →</a></div>
     <div class="lessons" id="lessons"></div>
   </section>
 
   <!-- УРОК -->
   <section id="vLesson" class="card" hidden>
     <div class="ex-head">
-      <div><h2 id="lsTitle"></h2><p class="muted" id="lsTip"></p></div>
+      <div><h2 id="lsTitle"></h2><p class="muted" id="lsTip"></p><div class="newkeys" id="lsKeys"></div></div>
       <button class="ghost" id="lsBack"></button>
     </div>
     <div class="exlist" id="exlist"></div>
@@ -72,7 +71,7 @@
   <section id="vPlay" class="card" hidden>
     <div class="ex-head">
       <div><h2 id="exTitle"></h2><p class="muted small" id="exTip"></p></div>
-      <div class="stats"><span><b id="sSpeed">–</b> <span id="sSpeedL"></span></span><span><b id="sErr">0</b> <span id="sErrL"></span></span></div>
+      <div class="stats"><span hidden><b id="sSpeed">–</b> <span id="sSpeedL"></span></span><span><b id="sErr">0</b> <span id="sErrL"></span></span></div>
     </div>
     <div class="bar"><i id="bar"></i></div>
     <div class="ready" id="ready"></div>
@@ -85,10 +84,10 @@
     <h2 id="rTitle"></h2>
     <p id="rMsg" class="muted" style="max-width:46ch"></p>
     <div class="nums">
-      <div><b id="rSpeed"></b><span id="rSpeedL"></span></div>
       <div><b id="rAcc"></b><span id="rAccL"></span></div>
       <div><b id="rTime"></b><span id="rTimeL"></span></div>
     </div>
+    <p class="muted small"><span id="rSpeedL"></span>: <b id="rSpeed"></b></p>
     <div class="btns"><button class="go" id="nextBtn"></button><button class="ghost" id="againBtn"></button></div>
     <p class="saved" id="saved"></p>
   </section>
