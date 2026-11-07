@@ -87,12 +87,13 @@
     const rows = [];
     ["pl", "ru"].forEach(l => K.LESSONS[l].forEach((ls, i) => {
       const best = [1, 2, 3, 4].map(ex => R.reduce((m, r) => (r.lang === l && r.lesson === i + 1 && r.exercise === ex ? Math.max(m, r.stars) : m), 0));
+      const last = [1, 2, 3, 4].map(ex => { const xs = R.filter(r => r.lang === l && r.lesson === i + 1 && r.exercise === ex); return xs.length ? xs[xs.length - 1].stars : 0; });
       const passes = Math.min(...[1, 2, 3, 4].map(ex => R.filter(r => r.lang === l && r.lesson === i + 1 && r.exercise === ex).length));
-      const stars = best.reduce((a, b) => a + b, 0); const done = best.every(b => b > 0); const started = best.some(b => b > 0);
+      const stars = last.reduce((a, b) => a + b, 0); const redo = started && last.some(x => x < 3); const done = best.every(b => b > 0); const started = best.some(b => b > 0);
       if (!started && !(i === 0 || rows.length < 1)) return;
-      rows.push(`<tr><td>${LANG[l]}</td><td class="n">${i + 1}</td><td>${esc(ls.title)}</td><td class="n">${stars} / 12 ★</td><td class="n">${passes}</td><td>${done ? '<span class="pill good">пройден</span>' : started ? "в процессе" : "—"}</td></tr>`);
+      rows.push(`<tr><td>${LANG[l]}</td><td class="n">${i + 1}</td><td>${esc(ls.title)}</td><td class="n">${stars} / 12 ★</td><td class="n">${passes}</td><td>${redo ? '<span class="pill warn">повторить</span> ' : ""}${done ? '<span class="pill good">пройден</span>' : started ? "в процессе" : "—"}</td></tr>`);
     }));
-    $("lessonsTbl").innerHTML = `<tr><th>Язык</th><th class="n">№</th><th>Урок</th><th class="n">Звёзды</th><th class="n">Пройден раз</th><th>Статус</th></tr>` +
+    $("lessonsTbl").innerHTML = `<tr><th>Язык</th><th class="n">№</th><th>Урок</th><th class="n">Звёзды (последний раз)</th><th class="n">Пройден раз</th><th>Статус</th></tr>` +
       (rows.length ? rows.join("") : `<tr><td colspan="6" class="muted">Пока ни одного урока.</td></tr>`);
 
     // последние

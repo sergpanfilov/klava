@@ -98,6 +98,7 @@ kbd { font-family: var(--mono); font-size: .8em; background: var(--surface); bor
 .ls .t { font-weight: 800; line-height: 1.25; }
 .ls .st { font-size: 14px; letter-spacing: 1px; color: var(--line); }
 .ls .st b { color: var(--index); font-weight: 400; }
+.redo { display: inline-block; margin-left: 6px; padding: 0 8px; border-radius: 999px; font-size: 12px; font-weight: 800; letter-spacing: 0; color: var(--ink); background: color-mix(in srgb, var(--index) 26%, var(--surface)); vertical-align: 1px; }
 .sec-h { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
 .sec-h h3 { font-size: 22px; }
 
