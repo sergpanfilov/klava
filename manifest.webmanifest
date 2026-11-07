@@ -1,0 +1,16 @@
+{
+  "name": "Klava",
+  "short_name": "Klava",
+  "description": "Kurs pisania dziesięcioma palcami po polsku i po rosyjsku",
+  "lang": "pl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F1F2F8",
+  "theme_color": "#E4465A",
+  "icons": [
+    { "src": "img/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "img/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "img/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
