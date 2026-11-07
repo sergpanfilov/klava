@@ -18,7 +18,7 @@
       tagline: "pisanie dziesięcioma palcami", login: "Zaloguj przez Google", logout: "Wyloguj",
       hello: n => n ? `Cześć, ${n}!` : "Cześć!", todayIs: "Dziś ćwiczymy po polsku.", nextTime: "Następnym razem — po rosyjsku.",
       minLbl: "Dzisiaj", week: "Ten tydzień:", weekOf: (a, b) => `${a} z ${b}`,
-      cont: l => `Ćwicz: lekcja ${l}`, again: "Powtórka", lessons: "Lekcje po polsku",
+      cont: l => `Ćwicz: lekcja ${l}`, again: "Powtórka", lessons: "Lekcje po polsku", passes: "Ile razy przerobiona cała lekcja",
       guest: "Ćwiczysz jako gość — wyniki zostają tylko w tej przeglądarce. Zaloguj się, żeby zapisywać postępy.",
       lesson: "Lekcja", back: "← Wszystkie lekcje", start: "Start", enter: "albo Enter",
       ready: "Połóż palce na rzędzie domowym i naciśnij", space: "spacja",
@@ -42,7 +42,7 @@
       tagline: "печать десятью пальцами", login: "Войти через Google", logout: "Выйти",
       hello: n => n ? `Привет, ${n}!` : "Привет!", todayIs: "Сегодня занимаемся по-русски.", nextTime: "В следующий раз — по-польски.",
       minLbl: "Сегодня", week: "Эта неделя:", weekOf: (a, b) => `${a} из ${b}`,
-      cont: l => `Заниматься: урок ${l}`, again: "Повторение", lessons: "Уроки по-русски",
+      cont: l => `Заниматься: урок ${l}`, again: "Повторение", lessons: "Уроки по-русски", passes: "Сколько раз пройден весь урок",
       guest: "Ты занимаешься как гость — результаты остаются только в этом браузере. Войди, чтобы сохранять успехи.",
       lesson: "Урок", back: "← Все уроки", start: "Старт", enter: "или Enter",
       ready: "Положи пальцы на основной ряд и нажми", space: "пробел",
@@ -108,6 +108,19 @@
 
   const bestStars = (l, ls, ex) => results.reduce((m, r) => (r.lang === l && r.lesson === ls + 1 && r.exercise === ex + 1 ? Math.max(m, r.stars) : m), 0);
   const lessonDone = (l, ls) => [0, 1, 2, 3].every(ex => bestStars(l, ls, ex) > 0);
+  // Сколько раз урок пройден целиком: каждое из 4 упражнений сделано хотя бы столько раз.
+  const lessonPasses = (l, ls) => Math.min(...[1, 2, 3, 4].map(ex => results.filter(r => r.lang === l && r.lesson === ls + 1 && r.exercise === ex).length));
+  // Счётчик-барабанчик: цифры на ленте; если число выросло с прошлого показа — лента прокручивается.
+  function odometer(n, prev, title) {
+    const digits = String(n).padStart(2, "0").split("");
+    const pdig = String(Math.min(prev, n)).padStart(digits.length, "0").split("");
+    const strip = Array.from({ length: 10 }, (_, d) => `<span>${d}</span>`).join("");
+    return `<span class="odo" title="${title}" aria-label="${title}: ${n}">` +
+      digits.map((d, i) => `<span class="dg"><span class="strip" style="--to:${d};--from:${pdig[i]}" data-roll="${d !== pdig[i] ? 1 : 0}">${strip}</span></span>`).join("") + `</span>`;
+  }
+  function rollOdometers() {
+    requestAnimationFrame(() => requestAnimationFrame(() => document.querySelectorAll('.strip[data-roll="1"]').forEach(s => s.classList.add("roll"))));
+  }
   const nextLesson = l => { const i = K.LESSONS[l].findIndex((_, i) => !lessonDone(l, i)); return i === -1 ? K.LESSONS[l].length - 1 : i; };
   const nextEx = (l, ls) => { const i = [0, 1, 2, 3].findIndex(ex => bestStars(l, ls, ex) === 0); return i === -1 ? 0 : i; };
   function secondsByDay() {
@@ -235,10 +248,16 @@
       const stars = [0, 1, 2, 3].reduce((s, ex) => s + bestStars(lang, i, ex), 0);
       const b = document.createElement("button");
       b.className = "ls" + (i === nl ? " next" : "") + (lessonDone(lang, i) ? " done" : "");
-      b.innerHTML = `<span class="num">${i + 1}</span><span class="t">${ls.title}</span><span class="st">${starStr(stars, 12)}</span>`;
+      const passes = lessonPasses(lang, i);
+      const seenKey = `klava-odo-${user ? user.id : "guest"}-${lang}-${i}`;
+      const seen = store.get(seenKey, passes);
+      store.set(seenKey, passes);
+      b.innerHTML = `<span class="num">${i + 1}</span><span class="t">${ls.title}</span>` +
+        odometer(passes, seen, t().passes) + `<span class="st">${starStr(stars, 12)}</span>`;
       b.addEventListener("click", () => openLesson(i));
       box.appendChild(b);
     });
+    rollOdometers();
   }
   function goHome() { show("home"); renderHome(); }
 

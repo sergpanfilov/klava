@@ -83,7 +83,14 @@ kbd { font-family: var(--mono); font-size: .8em; background: var(--surface); bor
 
 /* список уроков */
 .lessons { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
-.ls { text-align: left; background: var(--surface); border: 1.5px solid var(--line); border-radius: 16px; padding: 12px 14px; display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; align-items: center; }
+.ls { text-align: left; background: var(--surface); border: 1.5px solid var(--line); border-radius: 16px; padding: 12px 14px; display: grid; grid-template-columns: auto 1fr auto; gap: 2px 12px; align-items: center; }
+.ls .t { grid-column: 2; } .ls .st { grid-column: 2; }
+/* счётчик-барабанчик: сколько раз урок пройден целиком */
+.odo { grid-column: 3; grid-row: 1 / span 2; display: inline-flex; gap: 2px; padding: 3px; border-radius: 8px; background: var(--ink); align-self: center; }
+.odo .dg { width: 15px; height: 22px; overflow: hidden; border-radius: 4px; background: linear-gradient(var(--surface) 0 49%, color-mix(in srgb, var(--surface) 88%, var(--ink)) 51% 100%); }
+.odo .strip { display: flex; flex-direction: column; transform: translateY(calc(var(--to) * -22px)); font-family: var(--mono); font-weight: 700; font-size: 14px; line-height: 22px; text-align: center; color: var(--ink); }
+.odo .strip[data-roll="1"] { transform: translateY(calc(var(--from) * -22px)); }
+.odo .strip[data-roll="1"].roll { transform: translateY(calc(var(--to) * -22px)); transition: transform 1.1s cubic-bezier(.2, .9, .25, 1.15) .35s; }
 .ls:hover { border-color: var(--muted); }
 .ls.next { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent); }
 .ls.done .num { background: color-mix(in srgb, var(--ok) 20%, var(--surface)); }
@@ -192,4 +199,4 @@ td.n, th.n { text-align: right; }
 .day.hit { background: color-mix(in srgb, var(--ok) 22%, var(--surface)); }
 .day.today { outline: 2px solid var(--ink); outline-offset: -2px; }
 
-@media (prefers-reduced-motion: reduce) { .key.target { animation: none; } .text.shake { animation: none; } .fg, .bar i, .track i { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .odo .strip[data-roll="1"].roll { transition: none; } .key.target { animation: none; } .text.shake { animation: none; } .fg, .bar i, .track i { transition: none; } }
