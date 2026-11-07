@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Klava для семьи</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&subset=latin-ext,cyrillic&display=swap">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='6' width='28' height='20' rx='5' fill='%23E4465A'/%3E%3Crect x='7' y='18' width='18' height='3' rx='1.5' fill='white'/%3E%3C/svg%3E">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="./"><h1>Klava</h1><span>для семьи</span></a>
+    <div class="top-right">
+      <span class="who" id="who" hidden></span>
+      <button class="gbtn" id="loginBtn" hidden>Войти через Google</button>
+      <button class="ghost" id="logoutBtn" hidden>Выйти</button>
+    </div>
+  </header>
+
+  <p class="note" id="msg">Загружаю…</p>
+
+  <div id="main" class="wrap" hidden style="gap:20px">
+    <h2 id="title" style="font-size:clamp(26px,5vw,36px)"></h2>
+
+    <section class="card">
+      <div class="sec-h"><h3>Эта неделя</h3><span id="weekPill"></span></div>
+      <div class="days" id="days"></div>
+      <p class="muted small">Занятие засчитывается, если за день набралось от 10 минут чистой печати (паузы не считаются). План — 3 занятия в неделю.</p>
+    </section>
+
+    <div class="tiles" id="tiles"></div>
+
+    <section class="card">
+      <div class="sec-h"><h3>Скорость, знаков в минуту</h3><div class="lg" id="lg1"></div></div>
+      <div class="chart" id="chSpeed"></div>
+    </section>
+    <section class="card">
+      <div class="sec-h"><h3>Точность, %</h3><div class="lg" id="lg2"></div></div>
+      <div class="chart" id="chAcc"></div>
+      <p class="muted small">По дням занятий, среднее по упражнениям. Сначала важнее точность: цель — 95% и выше, скорость придёт сама.</p>
+    </section>
+
+    <section class="card">
+      <h3>По неделям</h3>
+      <div class="tbl-wrap"><table id="weeks"></table></div>
+    </section>
+
+    <section class="card">
+      <h3>Уроки</h3>
+      <div class="tbl-wrap"><table id="lessonsTbl"></table></div>
+    </section>
+
+    <section class="card">
+      <h3>Последние упражнения</h3>
+      <div class="tbl-wrap"><table id="recent"></table></div>
+    </section>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script src="lessons.js"></script>
+<script src="family.js"></script>
+</body>
+</html>

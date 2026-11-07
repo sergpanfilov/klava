@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Klava</title>
+<meta name="description" content="Klava — kurs pisania dziesięcioma palcami po polsku i po rosyjsku.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&subset=latin-ext,cyrillic&display=swap">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='6' width='28' height='20' rx='5' fill='%23E4465A'/%3E%3Crect x='7' y='18' width='18' height='3' rx='1.5' fill='white'/%3E%3C/svg%3E">
+</head>
+<body>
+<canvas id="confetti" hidden></canvas>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="./"><h1>Klava</h1><span id="tagline"></span></a>
+    <div class="top-right">
+      <div class="seg" role="group" aria-label="Język / Язык">
+        <button id="langPl" aria-pressed="false">PL</button>
+        <button id="langRu" aria-pressed="false">RU</button>
+      </div>
+      <span class="who" id="who" hidden></span>
+      <button class="gbtn" id="loginBtn" hidden></button>
+      <button class="ghost" id="logoutBtn" hidden></button>
+    </div>
+  </header>
+
+  <div class="banner" id="warnLayout" hidden><span id="warnLayoutT"></span><small id="warnLayoutS"></small></div>
+  <div class="banner" id="warnCaps" hidden></div>
+  <div class="banner" id="warnFocus" hidden></div>
+
+  <!-- ДОМ -->
+  <section id="vHome" class="wrap" style="gap:20px">
+    <div class="card today">
+      <div style="display:flex;flex-direction:column;gap:10px;min-width:0">
+        <h2 id="hello"></h2>
+        <p class="muted" id="todayLine"></p>
+        <div class="meter">
+          <div class="lbl"><span id="minLbl"></span><span><b id="minVal">0</b> / <span id="minGoal"></span> min</span></div>
+          <div class="track"><i id="minBar"></i></div>
+        </div>
+        <div class="week" id="week"></div>
+      </div>
+      <button class="go" id="continueBtn"></button>
+    </div>
+    <p class="note" id="guestNote" hidden></p>
+    <div class="sec-h"><h3 id="lessonsH"></h3><a class="small muted" id="familyLink" href="rodzina.html" hidden>Kabinet rodziny →</a></div>
+    <div class="lessons" id="lessons"></div>
+  </section>
+
+  <!-- УРОК -->
+  <section id="vLesson" class="card" hidden>
+    <div class="ex-head">
+      <div><h2 id="lsTitle"></h2><p class="muted" id="lsTip"></p></div>
+      <button class="ghost" id="lsBack"></button>
+    </div>
+    <div class="exlist" id="exlist"></div>
+    <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+      <button class="go" id="lsStart"></button><span class="muted small" id="lsEnter"></span>
+    </div>
+  </section>
+
+  <!-- УПРАЖНЕНИЕ -->
+  <section id="vPlay" class="card" hidden>
+    <div class="ex-head">
+      <div><h2 id="exTitle"></h2><p class="muted small" id="exTip"></p></div>
+      <div class="stats"><span><b id="sSpeed">–</b> <span id="sSpeedL"></span></span><span><b id="sErr">0</b> <span id="sErrL"></span></span></div>
+    </div>
+    <div class="bar"><i id="bar"></i></div>
+    <div class="ready" id="ready"></div>
+    <div class="text" id="text"></div>
+  </section>
+
+  <!-- ИТОГ -->
+  <section id="vDone" class="card res" hidden>
+    <div class="big-stars" id="rStars"></div>
+    <h2 id="rTitle"></h2>
+    <p id="rMsg" class="muted" style="max-width:46ch"></p>
+    <div class="nums">
+      <div><b id="rSpeed"></b><span id="rSpeedL"></span></div>
+      <div><b id="rAcc"></b><span id="rAccL"></span></div>
+      <div><b id="rTime"></b><span id="rTimeL"></span></div>
+    </div>
+    <div class="btns"><button class="go" id="nextBtn"></button><button class="ghost" id="againBtn"></button></div>
+    <p class="saved" id="saved"></p>
+  </section>
+
+  <div class="kb-wrap" id="kbWrap" hidden>
+    <div class="finger-say" id="say"></div>
+    <div class="kb" id="kb"></div>
+    <div class="hands" aria-hidden="true"><div class="hand" id="handL"></div><div class="hand" id="handR"></div></div>
+    <div class="legend" id="legend"></div>
+    <div class="under"><span class="muted small" id="lookHint"></span><button class="ghost" id="hideKb"></button></div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script src="lessons.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
