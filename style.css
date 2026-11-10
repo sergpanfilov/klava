@@ -208,3 +208,7 @@ td.n, th.n { text-align: right; }
 #langBtn u { text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
 /* телефон: компактная клавиатура — без ряда цифр и рук, клавиши крупнее */
 @media (max-width: 520px) { .kb .row:first-child, .hands { display: none; } .key { height: 40px; font-size: 14px; } .finger-say { font-size: 19px; } }
+
+/* выход на главную belhome.cc (09–10.11.2026, просьба Сержа) */
+.home-link { display: inline-block; margin: 0 0 6px; font-size: 13px; font-weight: 500; color: var(--muted); text-decoration: none; }
+.home-link:hover { text-decoration: underline; }
